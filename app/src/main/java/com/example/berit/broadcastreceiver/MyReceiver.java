@@ -10,40 +10,23 @@ import android.util.Log;
 public class MyReceiver extends BroadcastReceiver {
     public static String TAG = "MyReceiver";
 
-    public MyReceiver() {
-    }
+    private CalcEngine calcEngine = new CalcEngine();
 
     @Override
+    //Kutsutakse valja arvutamisteenus
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "Received system broadcast");
-        double value4 = 0;
+        String calc = "";
         if (isOrderedBroadcast()) {
             Bundle extras = intent.getExtras();
             if (extras != null) {
-                double value1 = extras.getDouble("n1");
-                double value2 = extras.getDouble("n2");
-                String value3 = extras.getString("op");
-                value4 = calculate(value1, value2, value3);
+                double nr1 = extras.getDouble("n1");
+                double nr2 = extras.getDouble("n2");
+                String operation = extras.getString("op");
+                calc = calcEngine.calculate(nr1, nr2, operation);
             }
             setResultCode(Activity.RESULT_OK);
-            setResultData(String.valueOf(value4));
+            setResultData(calc);
         }
-    }
-
-    public double calculate(double n1, double n2, String op) {
-        Log.d(TAG, "calculate");
-
-        double calc = 0;
-
-        if (op.equals("+")) {
-            calc = n1 + n2;
-        } else if (op.equals("-")) {
-            calc = n1 - n2;
-        } else if (op.equals("÷")) {
-            calc = n1 / n2;
-        } else if (op.equals("×")) {
-            calc = n1 * n2;
-        }
-        return calc;
     }
 }
